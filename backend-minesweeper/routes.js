@@ -1,10 +1,13 @@
 const AWS = require('aws-sdk');
 const express = require('express');
 const uuid = require('uuid');
+const { routes } = require('./app');
 const IS_OFFLINE = process.env.NODE_ENV !== 'production';
 const GAMES_TABLE = 'games';
 
 const gamesController = require('./controllers/games');
+const usersController = require('./controllers/users')
+
 
 const dynamoDb = IS_OFFLINE === true ?
     new AWS.DynamoDB.DocumentClient({
@@ -81,4 +84,7 @@ router.put('/employees', (req, res) => {
         res.json(result.Attributes);
     })
 });
+
+router.post('/signup',usersController.adminSignUp);
+router.post('/login', usersController.adminLogin)
 module.exports = router;
