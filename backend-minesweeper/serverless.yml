@@ -1,0 +1,32 @@
+service: minesweeper-aws
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: sa-east-1
+  iam:
+    role: arn:aws:iam::768095478863:role/minesweeper-aws-role
+functions:
+  app:
+    handler: index.server
+    environment:
+        NODE_ENV: production
+        GAMES_TABLE: games
+    events:
+      - http:
+          path: /games
+          method: GET
+          cors: true
+      - http:
+          path: /games
+          method: POST
+          cors: true
+      - http:
+          path: /games
+          method: PUT
+          cors: true
+      - http:
+          path: /games
+          method: DELETE
+          cors: true
+ 

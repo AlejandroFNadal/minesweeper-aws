@@ -1,0 +1,43 @@
+{
+  "name": "backend-minesweeper",
+  "version": "1.0.0",
+  "description": "a backend for a minesweeper",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "deploy": "npm run build && aws lambda update-function-code --function-name minesweeper-aws --zip-file fileb://build.zip --publish",
+    "clean": "rm build.zip",
+    "build": "zip -r build.zip node_modules index.js app.js routes.js",
+    "dynamodb-local-run": "docker-compose up",
+    "create-database": "aws dynamodb create-table --cli-input-json file://games-table-model.json --endpoint-url http://localhost:8080",
+    "start": "node app-local"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlejandroFNadal/minesweeper-aws.git"
+  },
+  "keywords": [
+    "minesweeper",
+    "backend",
+    "node",
+    "aws"
+  ],
+  "author": "Alejandro Nadal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlejandroFNadal/minesweeper-aws/issues"
+  },
+  "homepage": "https://github.com/AlejandroFNadal/minesweeper-aws#readme",
+  "dependencies": {
+    "aws-sdk": "^2.889.0",
+    "aws-serverless-express": "^3.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "serverless-express": "^2.0.11",
+    "serverless-http": "^2.7.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
