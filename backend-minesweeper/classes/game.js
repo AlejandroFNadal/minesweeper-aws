@@ -1,8 +1,8 @@
-const Cell = require('./cell')
+const Cell = require('./cell');
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1) ) + min;
-}
+};
 
 const Game = class{
     constructor(x,y,nBombs){
@@ -74,9 +74,21 @@ const Game = class{
             }
         } 
     }
-    textBoard(){
+    textBoardNotTiled(){
         let stringBoard="";
-        
+        for(let i = 0; i < this.x; i++){
+            for(let j = 0; j < this.y; j++){
+                if(this.board[i][j].type =='bomb'){
+                    stringBoard=stringBoard + "X "
+                }
+                if(this.board[i][j].type == 'empty'){
+                    stringBoard=stringBoard + this.board[i][j].neighborBombs +" "
+                }
+            }
+            stringBoard=stringBoard+"\n"
+        }
+        console.log("Inside textBoardNotTiled, ",stringBoard)
+        return stringBoard;
     }
 }
 module.exports = Game;

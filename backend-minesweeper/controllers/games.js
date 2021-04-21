@@ -27,6 +27,8 @@ exports.createGame = async function(req,res,next){
         }
         const id = uuid.v4();
         let board = aGame.board;
+        let textBoardNotTiled = aGame.textBoardNotTiled()
+        console.log(textBoardNotTiled)
         const params = {
             TableName: GAMES_TABLE,
             Item: {
@@ -42,7 +44,8 @@ exports.createGame = async function(req,res,next){
                 res.status(400).send(error);
             }
             res.json({
-                message:"Sucess in creating game"
+                message:"Sucess in creating game",
+                board:textBoardNotTiled
             });
         });
     } catch(error){
