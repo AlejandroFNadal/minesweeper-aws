@@ -8,7 +8,8 @@ const passport = require('passport')
 require('./config/passport')(passport)
 
 const gamesController = require('./controllers/games');
-const usersController = require('./controllers/users')
+const usersController = require('./controllers/users');
+const movesController = require('./controllers/moves');
 
 
 const dynamoDb = IS_OFFLINE === true ?
@@ -70,6 +71,6 @@ router.delete('/games/:id', (req, res) => {
 router.post('/signup',usersController.adminSignUp);
 router.post('/login', usersController.adminLogin)
 
-router.post('/move')
+router.post('/move', movesController.addMove)
 
 module.exports = router;

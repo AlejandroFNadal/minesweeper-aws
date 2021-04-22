@@ -30,6 +30,7 @@ exports.createGame = async function(req,res,next){
         
         const id = uuid.v4();
         let board = aGame.board;
+        let fullStatus = aGame.fullStatus;
         let textBoardNotTiled = aGame.textBoardNotTiled()
         console.log(textBoardNotTiled)
         const params = {
@@ -39,7 +40,8 @@ exports.createGame = async function(req,res,next){
                 x,
                 y,
                 nBombs,
-                board
+                board,
+                fullStatus
             },
         };
         

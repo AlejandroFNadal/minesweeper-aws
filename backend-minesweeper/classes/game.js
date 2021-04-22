@@ -90,5 +90,8 @@ const Game = class{
         console.log("Inside textBoardNotTiled, ",stringBoard)
         return stringBoard;
     }
+    endGame(){
+        this.fullStatus = "ended"
+    }
 }
 module.exports = Game;
