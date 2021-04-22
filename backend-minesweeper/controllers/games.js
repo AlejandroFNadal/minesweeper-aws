@@ -63,7 +63,8 @@ exports.createGame = async function(req,res,next){
             let result = await dynamoDb.update(userParams).promise()
             res.json({
                 message:"Sucess in creating game",
-                board:textBoardNotTiled
+                board:textBoardNotTiled,
+                id:id
             });
         });
     } catch(error){

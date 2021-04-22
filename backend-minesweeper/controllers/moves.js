@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const express = require('express');
+const { obj } = require('find-config');
 const uuid = require('uuid');
 const Game = require('../classes/game');
 const IS_OFFLINE = process.env.NODE_ENV !== 'production';
@@ -33,10 +34,19 @@ exports.addMove = async function (req, res, next) {
         let fullGame = result.Item;
         objGame = new Game(fullGame.x, fullGame.y, fullGame.nBombs, fullGame.board, fullGame.fullStatus)
         //check later for move outside board
-
-        if (type == "check" && fullGame.board[x][y].type == "bomb") {
-            objGame.endGame()
+        let currentCell = objGame.board[x][y]
+        if (type == "check"){
+            if(currentCell.type == "bomb") {
+                objGame.endGame()
+            }
+            else{
+                if(currentCell.type=="empty" && currentCell.status=="tiled"){
+                    objGame.board[x][y].status="untiled"
+                }
+            }
         }
+            
+        
         console.log(objGame.fullStatus)
         //update object
         let gameUpdate = dynamoDb.update({
@@ -44,14 +54,17 @@ exports.addMove = async function (req, res, next) {
             Key:{
                 id:id
             },
-            UpdateExpression: "set fullStatus = :status",
+            UpdateExpression: "set fullStatus = :status, board = :board",
             ExpressionAttributeValues:{
-                ":status" : objGame.fullStatus
+                ":status" : objGame.fullStatus,
+                ":board" : objGame.board
             }
         }).promise();
         if(gameUpdate){
             console.log(gameUpdate);
-            console.log(objGame.textBoardNotTiled)
+            console.log(objGame.textBoardNotTiled())
+            console.log("-------------------------------")
+            console.log(objGame.textBoardTiled())
             res.json({message:"Success with move"})
         }
 
