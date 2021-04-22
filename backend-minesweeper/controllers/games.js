@@ -16,7 +16,7 @@ exports.createGame = async function(req,res,next){
     
     try{
         
-        const{x,y,nBombs} = req.body.gameData;
+        const{x,y,nBombs, user} = req.body.gameData;
         let aGame=undefined;
         try{
             aGame = new Game(x,y,nBombs)
@@ -25,6 +25,9 @@ exports.createGame = async function(req,res,next){
             return error;
 
         }
+        
+        
+        
         const id = uuid.v4();
         let board = aGame.board;
         let textBoardNotTiled = aGame.textBoardNotTiled()
@@ -39,10 +42,23 @@ exports.createGame = async function(req,res,next){
                 board
             },
         };
-        dynamoDb.put(params, (error) => {
+        
+        dynamoDb.put(params, async (error) => {
             if (error) {
                 res.status(400).send(error);
+                return ;
             }
+            const userParams ={
+                TableName: 'users',
+                Key:{
+                    username: user
+                },
+                UpdateExpression:"set lastGame = :idGame",
+                ExpressionAttributeValues:{
+                    ':idGame': id
+                }
+            }
+            let result = await dynamoDb.update(userParams).promise()
             res.json({
                 message:"Sucess in creating game",
                 board:textBoardNotTiled

@@ -89,12 +89,13 @@ exports.adminLogin = async function(req,res,next){
     
     if(result.Items){
         console.log(result)
-        comparePassword(req.body.password,result.Items[0].password, async function(err,isMatch){
+        let userData = result.Items[0];
+        comparePassword(req.body.password,userData.password, async function(err,isMatch){
             if(isMatch && !err){
                 user.password = result.Items[0].password
                 let token = jwt.sign(user, process.env.JWTSECRET,{expiresIn:'1h'});
                 res.statusCode =200;
-                res.json({message:"correct login", token:'JWT '+token});
+                res.json({message:"correct login", token:'JWT '+token, lastGameId:userData.lastGame});
             }
             else{
                 next(new Error("invalid credentials"));
