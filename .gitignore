@@ -1,0 +1,4 @@
+backend-minesweeper/.serverless
+backend-minesweeper/node_modules
+backend-minesweeper/serverless.yml
+backend-minesweeper/.env

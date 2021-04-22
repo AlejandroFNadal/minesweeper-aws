@@ -4,6 +4,8 @@ const uuid = require('uuid');
 const { routes } = require('./app');
 const IS_OFFLINE = process.env.NODE_ENV !== 'production';
 const GAMES_TABLE = 'games';
+const passport = require('passport')
+require('./config/passport')(passport)
 
 const gamesController = require('./controllers/games');
 const usersController = require('./controllers/users')
@@ -46,7 +48,7 @@ router.get('/games/:id', (req, res) => {
         }
     });
 });
-router.post('/games', gamesController.createGame);
+router.post('/games', passport.authenticate('jwt', {failWithError:true, session:false}), gamesController.createGame);
 
 
 router.delete('/games/:id', (req, res) => {
@@ -64,27 +66,10 @@ router.delete('/games/:id', (req, res) => {
         res.json({ success: true });
     });
 });
-router.put('/employees', (req, res) => {
-    const id = req.body.id;
-    const name = req.body.name;
-    const params = {
-        TableName: EMPLOYEES_TABLE,
-        Key: {
-            id
-        },
-        UpdateExpression: 'set #name = :name',
-        ExpressionAttributeNames: { '#name': 'name' },
-        ExpressionAttributeValues: { ':name': name },
-        ReturnValues: "ALL_NEW"
-    }
-    dynamoDb.update(params, (error, result) => {
-        if (error) {
-            res.status(400).json({ error: 'Could not update Game' });
-        }
-        res.json(result.Attributes);
-    })
-});
 
 router.post('/signup',usersController.adminSignUp);
 router.post('/login', usersController.adminLogin)
+
+router.post('/move')
+
 module.exports = router;
