@@ -58,18 +58,16 @@ const Game = class {
                     if (this.board[i][j].type == "empty") {
                         //I am going to generalize and except corner and side cases
                         //counting bombs above the cell
-                        for (let k = (j - 1); k < j + 1; k++) {
+                        for (let k = (j - 1); k <= (j + 1); k++) {
                             if (k >= 0 && k < this.y && i != 0) {
                                 if (this.board[i - 1][k].type == 'bomb') {
                                     this.board[i][j].neighborBombs++;
                                 }
                             }
-                        }
-                        //checking below the cell
-                        for (let k = (j + 1); k < j + 1; k++) {
+                            //below now
                             if (k >= 0 && k < this.y && i < this.x - 1) {
-                                if (board[i + 1][k].type == 'bomb') {
-                                    board[i][j].neighborBombs++;
+                                if (this.board[i + 1][k].type == 'bomb') {
+                                    this.board[i][j].neighborBombs++;
                                 }
                             }
                         }
@@ -77,7 +75,7 @@ const Game = class {
                         if (j - 1 >= 0 && this.board[i][j - 1].type == 'bomb') {
                             this.board[i][j].neighborBombs++
                         }
-                        if (j + 1 < this.y - 1 && this.board[i][j + 1].type == 'bomb') {
+                        if (j + 1 < this.y && this.board[i][j + 1].type == 'bomb') {
                             this.board[i][j].neighborBombs++
                         }
                     }
