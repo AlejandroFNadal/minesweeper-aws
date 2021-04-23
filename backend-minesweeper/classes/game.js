@@ -4,6 +4,7 @@ function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
+
 const Game = class {
     constructor(x, y, nBombs, possibleBoard, possiblefullStatus) {
 

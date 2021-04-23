@@ -12,6 +12,34 @@ const dynamoDb = IS_OFFLINE === true ?
     }) :
     new AWS.DynamoDB.DocumentClient();
 
+    //recursively goes through in a depth first algoritm in a plus shape. 
+function depthFirstPath(prevPositions, x, y, board, maxX, maxY){
+    console.log(x," ",y)
+    if(prevPositions.includes([x,y])){
+        console.log("case 1")
+        return ;
+    }
+    else if(x < 0 || y < 0 || x >= maxX || y >= maxY){
+        console.log("case 2")
+        return ;
+    }
+    else if(board[x][y].neighborBombs >0 && board[x][y].status=="tiled"){
+        console.log("case 3")
+        board[x][y].status="untiled"
+        return ;
+    }
+    else if(board[x][y].neighborBombs == 0 && board[x][y].status=="tiled"){
+        console.log("case 4")
+        board[x][y].status="untiled";
+        prevPositions.push([x,y]);
+        depthFirstPath(prevPositions,x,y-1,board,maxX, maxY);
+        depthFirstPath(prevPositions,x+1,y,board,maxX, maxY);
+        depthFirstPath(prevPositions,x,y+1,board,maxX, maxY);
+        depthFirstPath(prevPositions,x-1,y,board,maxX, maxY);
+    }
+
+}
+
 exports.addMove = async function (req, res, next) {
     try {
         let { id, x, y, type } = req.query
@@ -40,8 +68,12 @@ exports.addMove = async function (req, res, next) {
                 objGame.endGame()
             }
             else{
-                if(currentCell.type=="empty" && currentCell.status=="tiled"){
+                if(currentCell.type=="empty" && currentCell.status=="tiled" && currentCell.neighborBombs>0){
                     objGame.board[x][y].status="untiled"
+                }
+                else if(currentCell.type=="empty" && currentCell.status=="tiled" && currentCell.neighborBombs==0){
+                    //recursive dynamic programming function called here
+                    depthFirstPath([],x,y, fullGame.board, fullGame.x, fullGame.y);
                 }
             }
         }
