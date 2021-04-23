@@ -6,14 +6,21 @@ function getRndInteger(min, max) {
 
 
 const Game = class {
-    constructor(x, y, nBombs, possibleBoard, possiblefullStatus) {
+    constructor(x, y, nBombs, possibleBoard, possiblefullStatus,possibleFlags) {
 
         console.log("Game Constructor")
         console.log(x, " ", y, " ", nBombs)
         this.x = x;
         this.y = y;
         this.nBombs = nBombs;
-        this.board = []
+        this.board = [];
+        
+        if(possibleFlags !== undefined){
+            this.flags=possibleFlags;
+        }
+        else{
+            this.flags=nBombs;
+        }
         if (possiblefullStatus) {
             this.fullStatus=possiblefullStatus
         }
@@ -108,7 +115,7 @@ const Game = class {
                 if (this.board[i][j].status == 'tiled') {
                     stringBoard = stringBoard + "| O "
                 }
-                else if (this.board[i][j].type == 'bomb') {
+                else if (this.board[i][j].type == 'bomb' && this.board[i][j].status =='untiled') {
                     stringBoard = stringBoard + "| X "
                 }
                 else if (this.board[i][j].status == 'flag') {
@@ -126,8 +133,13 @@ const Game = class {
         console.log("Inside textBoardNotTiled, ", stringBoard)
         return stringBoard;
     }
-    endGame() {
-        this.fullStatus = "ended"
+    endGame(status) {
+        if(status){
+            this.fullStatus="won"
+        }else{
+            this.fullStatus = "lost"
+        }
+        
     }
 }
 module.exports = Game;

@@ -40,6 +40,18 @@ function depthFirstPath(prevPositions, x, y, board, maxX, maxY){
 
 }
 
+
+function detectWin(board,x,y){
+    let win = true;
+    for(let i =0; i <x; i++){
+        for(let j =0; j < y; j++){
+            if(board[i][j].type == "bomb" && board[i][j].status!='flag'){
+                win = false
+            }
+        }
+    }
+    return win;
+}
 exports.addMove = async function (req, res, next) {
     try {
         let { id, x, y, type } = req.query
@@ -51,16 +63,18 @@ exports.addMove = async function (req, res, next) {
                 id:id
             }
         };
-        console.log("here")
         let result = await dynamoDb.get(params).promise()
-        console.log(result)
         if (!result.Item) {
             res.status(404).json({ error: `Game with id: ${id} not found` });
             return;
         }
 
         let fullGame = result.Item;
-        objGame = new Game(fullGame.x, fullGame.y, fullGame.nBombs, fullGame.board, fullGame.fullStatus)
+        objGame = new Game(fullGame.x, fullGame.y, fullGame.nBombs, fullGame.board, fullGame.fullStatus, fullGame.flags)
+        if(objGame.fullStatus != "active"){
+            res.status(200).json({error: 'Game has ended'})
+            return ;
+        }
         //check later for move outside board
         let currentCell = objGame.board[x][y]
         if (type == "check"){
@@ -77,7 +91,19 @@ exports.addMove = async function (req, res, next) {
                 }
             }
         }
-            
+        if (type == "flag"){
+            if(currentCell.status == "tiled"&& objGame.flags >0){
+                objGame.board[x][y].status = 'flag'
+                objGame.flags--
+            }
+            else if(currentCell.status == "flag"){
+                objGame.board[x][y].status = "tiled"
+                objGame.flags++
+            }
+        }
+        if(detectWin(objGame.board,objGame.x, objGame.y)){
+            objGame.endGame(true)
+        }   
         
         console.log(objGame.fullStatus)
         //update object
@@ -86,10 +112,11 @@ exports.addMove = async function (req, res, next) {
             Key:{
                 id:id
             },
-            UpdateExpression: "set fullStatus = :status, board = :board",
+            UpdateExpression: "set fullStatus = :status, board = :board, flags = :flags",
             ExpressionAttributeValues:{
                 ":status" : objGame.fullStatus,
-                ":board" : objGame.board
+                ":board" : objGame.board,
+                ":flags" : objGame.flags
             }
         }).promise();
         if(gameUpdate){
@@ -97,7 +124,8 @@ exports.addMove = async function (req, res, next) {
             console.log(objGame.textBoardNotTiled())
             console.log("-------------------------------")
             console.log(objGame.textBoardTiled())
-            res.json({message:"Success with move"})
+            res.json({message:"Success with move",
+                    game: objGame})
         }
 
     } catch (error) {
