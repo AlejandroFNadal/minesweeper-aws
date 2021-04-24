@@ -17,6 +17,7 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper'
 import { Router } from 'next/router';
 import GameBoard from './game'
+import GameBoardContinue from './continuation';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -67,16 +68,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MainMenu() {
 
-  const [menu,setMenu] = React.useState('true')
+  const [menu,setMenu] = React.useState(true)
+  const [continuation, setContinuation] = React.useState(false)
   const classes = useStyles();
   console.log(menu)
   const startNewGame=(e)=>{
       setMenu(false);
   }
+  const continueLastGame=(e)=>{
+    setContinuation(true);
+    
+  }
   return (
     <React.Fragment>
       <CssBaseline />
-      {menu ? (<>
+      {menu && !continuation ? (<>
         <Container maxWidth="sm" component="main" className={classes.heroContent}>
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
             Minesweeper-AWS
@@ -88,7 +94,7 @@ export default function MainMenu() {
         
         <Container maxWidth="md" component="main">
             <Grid container spacing={5} alignItems="flex-end">
-                <Grid item xs={6} >
+                <Grid item xs={6} onClick={continueLastGame}>
                     <Paper>
                         Continuar Juego
                     </Paper>
@@ -101,9 +107,10 @@ export default function MainMenu() {
             </Grid>
         
         </Container>
-      </>) :(
+      </>) :(!continuation && !menu?(
           <GameBoard/>
-      )}
+      ):<GameBoardContinue/>)
+      }
      
     </React.Fragment>
   );

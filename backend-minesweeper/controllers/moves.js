@@ -79,6 +79,7 @@ exports.addMove = async function (req, res, next) {
         let currentCell = objGame.board[x][y]
         if (type == "check"){
             if(currentCell.type == "bomb") {
+                objGame.board[x][y].status="untiled"
                 objGame.endGame()
             }
             else{

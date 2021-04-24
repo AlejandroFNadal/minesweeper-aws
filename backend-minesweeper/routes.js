@@ -72,5 +72,6 @@ router.post('/signup',usersController.adminSignUp);
 router.post('/login', usersController.adminLogin)
 
 router.post('/move', movesController.addMove)
+router.get('/game', usersController.userGetGame)
 
 module.exports = router;

@@ -105,3 +105,39 @@ exports.adminLogin = async function(req,res,next){
         res.status(401).json({message:"invalid credentials"})
     }
 }
+exports.userGetGame = async function(req, res,next){
+    try{
+        let user = req.query.user;
+        
+        const params ={
+            TableName: 'users',
+            Key:{
+                username:user
+            }
+        }
+        let result = await dynamoDb.get(params).promise();
+        console.log(result)
+        if(!result.Item){
+            res.status(404).json({error:"user not found"})
+            return ;
+        }
+
+        const getUserGameParams = {
+            TableName: 'games',
+            Key: {
+                id:result.Item.lastGame
+            }
+        };
+        let gameOfUser = await dynamoDb.get(getUserGameParams).promise()
+        console.log(gameOfUser)
+        if(gameOfUser.Item){
+            res.json(gameOfUser.Item);
+        }
+        else{
+            res.status(400).json({ error: 'Error retrieving Game' });
+        }
+    }catch(error){
+        console.log(error)
+        res.status(500).json({error:error})
+    }
+}

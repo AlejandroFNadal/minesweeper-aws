@@ -77,6 +77,7 @@ export default function SignIn() {
       if(data && data.token){
         cookie.set('token', data.token,{expires:2})
         cookie.set('lastGameId', data.lastGameId);
+        cookie.set('username', username)
         Router.push('/')
       }
     })

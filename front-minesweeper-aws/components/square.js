@@ -9,19 +9,24 @@ import Brightness5Icon from '@material-ui/icons/Brightness5';
 const useStyles = makeStyles((theme) => ({
 
     squares: {
-        backgroundColor: 'red',
-        width: '1rem',
-        height: '1rem',
+        backgroundColor: 'green',
+        width: '2em',
+        height: '2em',
         border: '1px solid',
-        
-    },
-    untiled:{
-        backgroundColor:'blue',
-        width: '1rem',
-        height: '1rem',
-        border: '1px solid',
+        fontSize:'1.5em',
+        color:'white',
         textAlign:'center',
         verticalAlign:'center'
+    },
+    untiled:{
+        backgroundColor:'lightgreen',
+        width: '2em',
+        height: '2em',
+        border: '1px solid',
+        textAlign:'center',
+        verticalAlign:'center',
+        fontSize:'1.5em',
+        color:'white'
     },
     rows: {
         display: 'flex',
@@ -41,9 +46,9 @@ export default function Square(obj) {
     let gameUpdater = obj.gameUpdater;
     console.log(gameId)
 
-    let moveCheck = async function(){
+    let moveCheck = async function(type){
         console.log("Inside moveCheck")
-        let fetchString = `${config.local_back}/move?id=${gameId}&x=${x}&y=${y}&type=check`
+        let fetchString = `${config.local_back}/move?id=${gameId}&x=${x}&y=${y}&type=${type}`
         console.log(fetchString)
         let moveAttempt = await fetch(fetchString,{
             method:'POST',
@@ -58,13 +63,15 @@ export default function Square(obj) {
         //there is a proper response
         console.log(`Move in ${x} ${y}`)
     }
+    
     return (
         <Box
             className={propObject.status === 'untiled' ? classes.untiled : classes.squares}
-            onClick={moveCheck}>
+            onClick={() =>{moveCheck('check')}} onContextMenu={(e)=> {e.preventDefault(); moveCheck('flag')}}>
                 {propObject.neighborBombs > 0 && propObject.status ==="untiled" ? propObject.neighborBombs :""}
                 {propObject.type==="bomb" && propObject.status ==="untiled" ?
                 <Brightness5Icon/>:""}
+                {propObject.status ==="flag" ? <FlagIcon/>: ""}
         </Box>)
 }
             

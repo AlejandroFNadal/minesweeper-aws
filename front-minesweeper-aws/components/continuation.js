@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function GameBoard() {
+export default function GameBoardContinue() {
     const classes = useStyles();
     let [x, setX] = React.useState(0)
     let [y, sety] = React.useState(0)
@@ -86,22 +86,16 @@ export default function GameBoard() {
     function updateBoard(prevState, currentState) {
         setGameData(currentState)
     }
-    const startGame = async function (e) {
-        e.preventDefault()
-        let newGame = await fetch(config.local_back + '/games', {
-            method: 'POST',
+    const startGame = async function () {
+        let user = cookie.get('username')
+        console.log("user",user)
+        let fetchString = `${config.local_back}/game?user=${cookie.get('username')}`
+        let newGame = await fetch(fetchString, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': cookie.get('token')
-            },
-            body: JSON.stringify({
-                gameData: {
-                    x: 4,
-                    y: 4,
-                    nBombs: 4,
-                    user: "Ale"
-                }
-            })
+            }
         })
         const game = await newGame.json()
         updateBoard(gameData, game)
@@ -110,21 +104,13 @@ export default function GameBoard() {
         console.log("showBoard ", showBoard)
 
     }
-    
+    useEffect(()=>{
+        startGame();
+    },[])
     return (
         <Grid container spacing={2}>
             <Grid item xs={4}>
-                <Box p={2} className={classes.drawer}>
-                    <form onSubmit={startGame}>
-                        <div>
-                            <TextField margin="normal" id="X" name="X" label="X" type="text" />
-                            <TextField margin="normal" id="Y" name="Y" label="Y" type="text" />
-                            <TextField margin="normal" id="nBombs" name="nBombs" label="Bombas" type="text" />
-                            <button type="submit">Comenzar</button>
-                        </div>
-
-                    </form>
-                </Box>
+               
             </Grid>
             <Grid item xs={8} >
                 <Box className={classes.rightContentBox}>
@@ -136,7 +122,7 @@ export default function GameBoard() {
                             <Box className={classes.gameInfo}>
                             <FlagIcon />
                             </Box>
-                            <Box className={classes.gameInfo} pr={1} >{gameData ? gameData.flags : 0}</Box>
+                            <Box className={classes.gameInfo} pr={1} >5</Box>
                         </Box>
                         <Box display='flex'  pl={1}>
                             <Box className={classes.gameInfo}>
