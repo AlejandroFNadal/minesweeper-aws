@@ -15,7 +15,8 @@ const dynamoDb = IS_OFFLINE === true ?
 exports.createGame = async function(req,res,next){
     
     try{
-        
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
         const{x,y,nBombs, user} = req.body.gameData;
         let aGame=undefined;
         try{
@@ -63,11 +64,9 @@ exports.createGame = async function(req,res,next){
                 }
             }
             let result = await dynamoDb.update(userParams).promise()
-            res.json({
-                message:"Sucess in creating game",
-                board:textBoardNotTiled,
-                id:id
-            });
+            res.json(
+                {id,...aGame}
+            );
         });
     } catch(error){
         console.log(error);
