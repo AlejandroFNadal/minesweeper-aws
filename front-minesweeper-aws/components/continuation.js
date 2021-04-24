@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper'
-import { Router } from 'next/router';
+import { useRouter } from 'next/router'
 import Drawer from '@material-ui/core/Drawer'
 import config from '../config/vars'
 import cookie from 'js-cookie';
@@ -63,7 +63,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function GameBoardContinue() {
+export default function GameBoardContinue(parentState) {
+    console.log(parentState)
+    const router = useRouter()
     const classes = useStyles();
     let [x, setX] = React.useState(0)
     let [y, sety] = React.useState(0)
@@ -71,7 +73,7 @@ export default function GameBoardContinue() {
     let [showBoard, setshowBoard] = React.useState(false);
     let [gameData, setGameData] = React.useState({});
     let [flags, setFlags] = React.useState(0)
-
+    
     function handleShowBoard() {
         setshowBoard(true)
     }
@@ -79,7 +81,7 @@ export default function GameBoardContinue() {
     function retornRow(row) {
         return <div className={classes.rows}>
             {row.map((elem) =>
-                <Square obj={elem} id={gameData.id} gameUpdater={updateBoard} />)}
+                <Square obj={elem} id={gameData.id} gameUpdater={updateBoard} game={gameData} />)}
         </div>
     }
 
@@ -109,10 +111,8 @@ export default function GameBoardContinue() {
     },[])
     return (
         <Grid container spacing={2}>
-            <Grid item xs={4}>
-               
-            </Grid>
-            <Grid item xs={8} >
+            
+            <Grid item xs={12} >
                 <Box className={classes.rightContentBox}>
                     <Typography className={classes.title} variant="h4">
                         Minesweeper-AWS
@@ -122,19 +122,26 @@ export default function GameBoardContinue() {
                             <Box className={classes.gameInfo}>
                             <FlagIcon />
                             </Box>
-                            <Box className={classes.gameInfo} pr={1} >5</Box>
+                            <Box className={classes.gameInfo} pr={1} >{gameData ? gameData.flags : 0}</Box>
                         </Box>
                         <Box display='flex'  pl={1}>
                             <Box className={classes.gameInfo}>
                             <Brightness5Icon />
                             </Box>
-                            <Box className={classes.gameInfo} pr={1} height='100%'>6</Box>
+                            <Box className={classes.gameInfo} pr={1} height='100%'>{gameData ? gameData.nBombs : 0}</Box>
                         </Box>
                     </Box>
                     <Box className={classes.game} display='flex' justifyContent='center' pt={4}>
-                        <ul>{showBoard ?
+                        <ul>{showBoard && gameData ?
                             gameData.board.map(elem => { return retornRow(elem) }) : null}
                         </ul>
+                    </Box>
+                    <Box display='flex' justifyContent='center pt={4}'>
+                        {gameData.fullStatus === "won" ? <p>Ganaste!</p> : ""}
+                        {gameData.fullStatus === "lost" ? <p>Perdiste</p> : ""}
+                    </Box>
+                    <Box>
+                        <Button onClick={()=>{parentState.setMenu()}}> Regresar</Button>
                     </Box>
                 </Box>
             </Grid>

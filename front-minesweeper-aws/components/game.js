@@ -1,14 +1,8 @@
 import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
+
 import Button from '@material-ui/core/Button';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CssBaseline from '@material-ui/core/CssBaseline';
+
 import Grid from '@material-ui/core/Grid';
-import StarIcon from '@material-ui/icons/StarBorder';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
@@ -25,6 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Square from './square';
 import FlagIcon from '@material-ui/icons/Flag';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
+import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles((theme) => ({
     drawer: {
@@ -63,8 +58,9 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 
-export default function GameBoard() {
+export default function GameBoard(parentState) {
     const classes = useStyles();
+    const {register, formState, handleSubmit}= useForm()
     let [x, setX] = React.useState(0)
     let [y, sety] = React.useState(0)
     let [nBombs, setNBombs] = React.useState(0)
@@ -79,7 +75,7 @@ export default function GameBoard() {
     function retornRow(row) {
         return <div className={classes.rows}>
             {row.map((elem) =>
-                <Square obj={elem} id={gameData.id} gameUpdater={updateBoard} />)}
+                <Square obj={elem} id={gameData.id} gameUpdater={updateBoard} game={gameData}/>)}
         </div>
     }
 
@@ -87,7 +83,7 @@ export default function GameBoard() {
         setGameData(currentState)
     }
     const startGame = async function (e) {
-        e.preventDefault()
+        console.log('info',e)
         let newGame = await fetch(config.local_back + '/games', {
             method: 'POST',
             headers: {
@@ -96,10 +92,10 @@ export default function GameBoard() {
             },
             body: JSON.stringify({
                 gameData: {
-                    x: 4,
-                    y: 4,
-                    nBombs: 4,
-                    user: "Ale"
+                    x: e.X,
+                    y: e.Y,
+                    nBombs: e.nBombs,
+                    user: cookie.get('username')
                 }
             })
         })
@@ -115,11 +111,11 @@ export default function GameBoard() {
         <Grid container spacing={2}>
             <Grid item xs={4}>
                 <Box p={2} className={classes.drawer}>
-                    <form onSubmit={startGame}>
+                    <form onSubmit={handleSubmit(startGame)}>
                         <div>
-                            <TextField margin="normal" id="X" name="X" label="X" type="text" />
-                            <TextField margin="normal" id="Y" name="Y" label="Y" type="text" />
-                            <TextField margin="normal" id="nBombs" name="nBombs" label="Bombas" type="text" />
+                            <TextField {...register("X")} margin="normal" id="X" name="X" label="X" type="text" />
+                            <TextField {...register("Y")} margin="normal" id="Y" name="Y" label="Y" type="text" />
+                            <TextField {...register("nBombs")} margin="normal" id="nBombs" name="nBombs" label="Bombas" type="text" />
                             <button type="submit">Comenzar</button>
                         </div>
 
@@ -142,13 +138,20 @@ export default function GameBoard() {
                             <Box className={classes.gameInfo}>
                             <Brightness5Icon />
                             </Box>
-                            <Box className={classes.gameInfo} pr={1} height='100%'>6</Box>
+                            <Box className={classes.gameInfo} pr={1} height='100%'>{gameData ? gameData.nBombs : 0}</Box>
                         </Box>
                     </Box>
                     <Box className={classes.game} display='flex' justifyContent='center' pt={4}>
-                        <ul>{showBoard ?
+                        <ul>{showBoard && gameData?
                             gameData.board.map(elem => { return retornRow(elem) }) : null}
                         </ul>
+                    </Box>
+                    <Box display='flex' justifyContent='center pt={4}'>
+                        {gameData.fullStatus === "won" ? <p>You Won!</p> : ""}
+                        {gameData.fullStatus === "lost" ? <p>You Lose</p> : ""}
+                    </Box>
+                    <Box>
+                        <Button onClick={()=>{parentState.setMenu()}}> Regresar</Button>
                     </Box>
                 </Box>
             </Grid>

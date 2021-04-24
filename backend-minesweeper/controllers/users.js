@@ -93,7 +93,7 @@ exports.adminLogin = async function(req,res,next){
         comparePassword(req.body.password,userData.password, async function(err,isMatch){
             if(isMatch && !err){
                 user.password = result.Items[0].password
-                let token = jwt.sign(user, process.env.JWTSECRET,{expiresIn:'1h'});
+                let token = jwt.sign(user, process.env.JWTSECRET,{expiresIn:'6h'});
                 res.statusCode =200;
                 res.json({message:"correct login", token:'JWT '+token, lastGameId:userData.lastGame});
             }

@@ -28,41 +28,13 @@ const useStyles = makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  toolbar: {
-    flexWrap: 'wrap',
-  },
-  toolbarTitle: {
-    flexGrow: 1,
-  },
-  link: {
-    margin: theme.spacing(1, 1.5),
-  },
-  heroContent: {
-    padding: theme.spacing(8, 0, 6),
-  },
-  cardHeader: {
-    backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
-  },
-  cardPricing: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
-  },
-  footer: {
-    borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(8),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing(6),
-      paddingBottom: theme.spacing(6),
-    },
-  },
+  button:{
+    height:'3rem',
+    textAlign:'center',
+    display:'flex',
+    flexDirection:'column',
+    justifyContent:'center'
+  }
 }));
 
 
@@ -78,6 +50,10 @@ export default function MainMenu() {
   const continueLastGame=(e)=>{
     setContinuation(true);
     
+  }
+  const goBackToMenu=(e)=>{
+    setMenu(true);
+    setContinuation(false);
   }
   return (
     <React.Fragment>
@@ -95,12 +71,12 @@ export default function MainMenu() {
         <Container maxWidth="md" component="main">
             <Grid container spacing={5} alignItems="flex-end">
                 <Grid item xs={6} onClick={continueLastGame}>
-                    <Paper>
+                    <Paper className={classes.button}>
                         Continuar Juego
                     </Paper>
                 </Grid>
                 <Grid item xs={6} onClick={startNewGame}>
-                    <Paper>
+                    <Paper className={classes.button}>
                         Nuevo Juego
                     </Paper>
                 </Grid>
@@ -108,8 +84,8 @@ export default function MainMenu() {
         
         </Container>
       </>) :(!continuation && !menu?(
-          <GameBoard/>
-      ):<GameBoardContinue/>)
+          <GameBoard setMenu={goBackToMenu}/>
+      ):<GameBoardContinue setMenu={goBackToMenu}/>)
       }
      
     </React.Fragment>
