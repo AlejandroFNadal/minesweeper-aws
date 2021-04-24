@@ -37,7 +37,7 @@ var getToken = function(headers){
         return null;
     }
 };
-exports.adminSignUp = async function(req,res,next){
+exports.signUp = async function(req,res,next){
     let user = req.body;
     bcrypt.genSalt(10, function(err,salt){
         if(err){
@@ -72,7 +72,7 @@ exports.adminSignUp = async function(req,res,next){
     
 }
 
-exports.adminLogin = async function(req,res,next){
+exports.login = async function(req,res,next){
     let user = req.body;
     const params ={
         TableName: 'users',
@@ -116,7 +116,6 @@ exports.userGetGame = async function(req, res,next){
             }
         }
         let result = await dynamoDb.get(params).promise();
-        console.log(result)
         if(!result.Item){
             res.status(404).json({error:"user not found"})
             return ;
@@ -129,7 +128,6 @@ exports.userGetGame = async function(req, res,next){
             }
         };
         let gameOfUser = await dynamoDb.get(getUserGameParams).promise()
-        console.log(gameOfUser)
         if(gameOfUser.Item){
             res.json(gameOfUser.Item);
         }

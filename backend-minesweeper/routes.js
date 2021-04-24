@@ -19,59 +19,18 @@ const dynamoDb = IS_OFFLINE === true ?
     }) :
     new AWS.DynamoDB.DocumentClient();
 const router = express.Router();
-router.get('/games', (req, res) => {
-    const params = {
-        TableName: GAMES_TABLE
-    };
-    dynamoDb.scan(params, (error, result) => {
-        if (error) {
-            res.status(400).json({ error: 'Error fetching the games' });
-        }
-        res.json(result.Items);
-    });
-});
-router.get('/games/:id', (req, res) => {
-    const id = req.params.id;
-    const params = {
-        TableName: GAMES_TABLE,
-        Key: {
-            id
-        }
-    };
-    dynamoDb.get(params, (error, result) => {
-        if (error) {
-            res.status(400).json({ error: 'Error retrieving Game' });
-        }
-        if (result.Item) {
-            res.json(result.Item);
-        } else {
-            res.status(404).json({ error: `Game with id: ${id} not found` });
-        }
-    });
-});
+
+router.get('/games',  passport.authenticate('jwt', {failWithError:true, session:false}),gamesController.getAllGames);
+router.get('/games/:id', passport.authenticate('jwt', {failWithError:true, session:false}),gamesController.getGame);
 router.post('/games', passport.authenticate('jwt', {failWithError:true, session:false}), gamesController.createGame);
 
 
-router.delete('/games/:id', (req, res) => {
-    const id = req.params.id;
-    const params = {
-        TableName: GAMES_TABLE,
-        Key: {
-            id
-        }
-    };
-    dynamoDb.delete(params, (error) => {
-        if (error) {
-            res.status(400).json({ error: 'Could not delete Employee' });
-        }
-        res.json({ success: true });
-    });
-});
+router.delete('/games/:id', passport.authenticate('jwt', {failWithError:true, session:false}), gamesController.deleteGame);
 
-router.post('/signup',usersController.adminSignUp);
-router.post('/login', usersController.adminLogin)
+router.post('/signup',usersController.signUp);
+router.post('/login', usersController.login)
 
-router.post('/move', movesController.addMove)
-router.get('/game', usersController.userGetGame)
+router.post('/move', passport.authenticate('jwt', {failWithError:true, session:false}), movesController.addMove)
+router.get('/game', passport.authenticate('jwt', {failWithError:true, session:false}), usersController.userGetGame)
 
 module.exports = router;

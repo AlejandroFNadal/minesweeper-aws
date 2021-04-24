@@ -9,7 +9,7 @@
     "clean": "rm build.zip",
     "build": "zip -r build.zip node_modules index.js app.js routes.js",
     "dynamodb-local-run": "docker-compose up",
-    "create-database": "aws dynamodb create-table --cli-input-json file://games-table-model.json --endpoint-url http://localhost:8080 && aws dynamodb create-table --cli-input-json file://tableDef/users-table-model.json --endpoint-url http://localhost:8080 ",
+    "create-database": "aws dynamodb create-table --cli-input-json file://tableDef/games-table-model.json --endpoint-url http://localhost:8080 && aws dynamodb create-table --cli-input-json file://tableDef/users-table-model.json --endpoint-url http://localhost:8080 ",
     "start": "node app-local"
   },
   "repository": {

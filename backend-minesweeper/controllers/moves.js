@@ -23,12 +23,12 @@ function depthFirstPath(prevPositions, x, y, board, maxX, maxY){
         console.log("case 2")
         return ;
     }
-    else if(board[x][y].neighborBombs >0 && board[x][y].status=="tiled"){
+    else if(board[x][y].neighborBombs >0 && board[x][y].status==="tiled"){
         console.log("case 3")
         board[x][y].status="untiled"
         return ;
     }
-    else if(board[x][y].neighborBombs == 0 && board[x][y].status=="tiled"){
+    else if(board[x][y].neighborBombs === 0 && board[x][y].status==="tiled"){
         console.log("case 4")
         board[x][y].status="untiled";
         prevPositions.push([x,y]);
@@ -77,27 +77,27 @@ exports.addMove = async function (req, res, next) {
         }
         //check later for move outside board
         let currentCell = objGame.board[x][y]
-        if (type == "check"){
-            if(currentCell.type == "bomb") {
+        if (type === "check"){
+            if(currentCell.type === "bomb") {
                 objGame.board[x][y].status="untiled"
                 objGame.endGame()
             }
             else{
-                if(currentCell.type=="empty" && currentCell.status=="tiled" && currentCell.neighborBombs>0){
+                if(currentCell.type==="empty" && currentCell.status==="tiled" && currentCell.neighborBombs>0){
                     objGame.board[x][y].status="untiled"
                 }
-                else if(currentCell.type=="empty" && currentCell.status=="tiled" && currentCell.neighborBombs==0){
+                else if(currentCell.type==="empty" && currentCell.status==="tiled" && currentCell.neighborBombs===0){
                     //recursive dynamic programming function called here
                     depthFirstPath([],x,y, fullGame.board, fullGame.x, fullGame.y);
                 }
             }
         }
-        if (type == "flag"){
-            if(currentCell.status == "tiled"&& objGame.flags >0){
+        if (type === "flag"){
+            if(currentCell.status === "tiled"&& objGame.flags >0){
                 objGame.board[x][y].status = 'flag'
                 objGame.flags--
             }
-            else if(currentCell.status == "flag"){
+            else if(currentCell.status === "flag"){
                 objGame.board[x][y].status = "tiled"
                 objGame.flags++
             }
@@ -121,10 +121,6 @@ exports.addMove = async function (req, res, next) {
             }
         }).promise();
         if(gameUpdate){
-            console.log(gameUpdate);
-            console.log(objGame.textBoardNotTiled())
-            console.log("-------------------------------")
-            console.log(objGame.textBoardTiled())
             res.json({message:"Success with move",
                     game: objGame})
         }
