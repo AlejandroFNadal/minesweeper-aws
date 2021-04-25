@@ -32,10 +32,6 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -59,7 +55,7 @@ export default function SignIn() {
   function handleSubmit(e){
     console.log("here")
     e.preventDefault();
-    fetch(`${config.local_back}/login`,{
+    fetch(`${config.local_back}/signup`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'
@@ -74,12 +70,29 @@ export default function SignIn() {
     })
     .then((data)=>{
       console.log(data);
-      if(data && data.token){
-        cookie.set('token', data.token,{expires:2})
-        cookie.set('lastGameId', data.lastGameId);
-        cookie.set('username', username)
-        Router.push('/')
-      }
+
+      fetch(`${config.local_back}/login`,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify({
+          username,
+          password
+        })
+      })
+      .then((r) =>{
+        return r.json();
+      })
+      .then((loginData)=>{
+        console.log("loginData ",loginData);
+        if(loginData && loginData.token){
+          cookie.set('token', loginData.token,{expires:2})
+          cookie.set('lastGameId', loginData.lastGameId);
+          cookie.set('username', username)
+          Router.push('/')
+        }
+      })
     })
   }
   return (
@@ -89,9 +102,8 @@ export default function SignIn() {
         <Typography component="h1" variant="h4">
             Minesweeper-AWS
         </Typography>
-        <br/>
         <Typography component="h1" variant="h5">
-            Ingresa a tu cuenta
+            Registrate
         </Typography>
         <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <TextField
@@ -135,9 +147,6 @@ export default function SignIn() {
           </Button>
         </form>
         
-      <Box>
-        <Link href="/signup">Registrate</Link>
-      </Box>
       </div>
       <Box mt={8}>
         

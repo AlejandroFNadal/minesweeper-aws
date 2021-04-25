@@ -16,21 +16,32 @@ function Home() {
   let lastGameId = cookie.get('lastGameId');
   console.log("inside Home")
   console.log(lastGameId)
-  const {data, revalidate} = useSWR(config.local_back+'/games/'+lastGameId, async function() {
+  useEffect(()=>{
     
-    const res = await fetch(config.local_back+'/games/'+lastGameId,{
-      method:'GET',
-      headers:{
-        Authorization: cookie.get('token')
-      }
-    });
-    return res.json();
+  },[])
+  const {data, revalidate} = useSWR(config.local_back+'/validate', async function() {
+    try{
+      const res = await fetch(`${config.local_back}/validate`,{
+        method:'GET',
+        headers:{
+          'Authorization': cookie.get('token')
+        }
+      });
+      return res.json();
+    }catch(error){
+      console.log(error);
+      Router.push('/error')
+    }
+    
   });
   let loggedIn = false;
   if (!data) return <h1>Loading...</h1>;
-  else if (data.id) {
+  else if (data.message === "continue") {
     console.log(data)
     loggedIn = true;
+  }
+  else{
+    Router.push('/login')
   }
   
   

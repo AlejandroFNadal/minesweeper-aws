@@ -54,6 +54,8 @@ function detectWin(board,x,y){
 }
 exports.addMove = async function (req, res, next) {
     try {
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
         let { id, x, y, type } = req.query
         x = parseInt(x)
         y = parseInt(y)

@@ -39,6 +39,8 @@ var getToken = function(headers){
 };
 exports.signUp = async function(req,res,next){
     let user = req.body;
+    res.setHeader('content-type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     bcrypt.genSalt(10, function(err,salt){
         if(err){
             return next(err)
@@ -73,6 +75,9 @@ exports.signUp = async function(req,res,next){
 }
 
 exports.login = async function(req,res,next){
+    res.setHeader('content-type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Methods","OPTIONS,POST,GET");
     let user = req.body;
     const params ={
         TableName: 'users',
@@ -107,6 +112,8 @@ exports.login = async function(req,res,next){
 }
 exports.userGetGame = async function(req, res,next){
     try{
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
         let user = req.query.user;
         
         const params ={
@@ -136,6 +143,18 @@ exports.userGetGame = async function(req, res,next){
         }
     }catch(error){
         console.log(error)
+        res.status(500).json({error:error})
+    }
+}
+
+exports.validate = async function (req,res,next){
+    try{
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader("Access-Control-Allow-Methods","OPTIONS,GET");
+        res.status(200).json({message:"continue"});
+    }catch(error){
+        console.log(error);
         res.status(500).json({error:error})
     }
 }

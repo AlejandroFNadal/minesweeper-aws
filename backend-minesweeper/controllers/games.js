@@ -73,7 +73,10 @@ exports.createGame = async function(req,res,next){
 
 exports.getGame = async function(req,res,next){
     try{
-        const id = req.params.id;
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader("Access-Control-Allow-Methods","OPTIONS,POST,GET");
+        const id = req.query.id;
         const params = {
             TableName: 'games',
             Key: {
@@ -99,6 +102,9 @@ exports.getGame = async function(req,res,next){
 
 exports.getAllGames = async function(req,res,next){
     try{
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader("Access-Control-Allow-Methods","OPTIONS,POST,GET");
         const params = {
             TableName: 'games'
         };
@@ -117,6 +123,8 @@ exports.getAllGames = async function(req,res,next){
 
 exports.deleteGame = async function(req,res,next){
     try{
+        res.setHeader('content-type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
         const id = req.params.id;
         const params = {
             TableName: 'games',

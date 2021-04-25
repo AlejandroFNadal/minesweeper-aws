@@ -20,8 +20,8 @@ const dynamoDb = IS_OFFLINE === true ?
     new AWS.DynamoDB.DocumentClient();
 const router = express.Router();
 
-router.get('/games',  passport.authenticate('jwt', {failWithError:true, session:false}),gamesController.getAllGames);
-router.get('/games/:id', passport.authenticate('jwt', {failWithError:true, session:false}),gamesController.getGame);
+
+router.get('/games',passport.authenticate('jwt', {failWithError:true, session:false}),gamesController.getGame);
 router.post('/games', passport.authenticate('jwt', {failWithError:true, session:false}), gamesController.createGame);
 
 
@@ -33,4 +33,5 @@ router.post('/login', usersController.login)
 router.post('/move', passport.authenticate('jwt', {failWithError:true, session:false}), movesController.addMove)
 router.get('/game', passport.authenticate('jwt', {failWithError:true, session:false}), usersController.userGetGame)
 
+router.get('/validate', passport.authenticate('jwt',{failWithError:true,session:false}), usersController.validate)
 module.exports = router;
