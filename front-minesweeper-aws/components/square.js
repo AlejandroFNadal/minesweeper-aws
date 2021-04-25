@@ -6,8 +6,8 @@ import cookie from 'js-cookie'
 import FlagIcon from '@material-ui/icons/Flag';
 import Brightness5Icon from '@material-ui/icons/Brightness5';
 
-let widthDyn = '1em';
-let heightDyn = '1em';
+let widthDyn = '2em';
+let heightDyn = '2em';
 const useStyles = makeStyles((theme) => ({
 
     squares: {

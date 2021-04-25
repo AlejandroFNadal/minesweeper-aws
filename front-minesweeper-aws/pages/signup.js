@@ -13,7 +13,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Image from 'next/image'
 import cookie from 'js-cookie'
 //import { Router } from '@material-ui/icons';
 import Router from 'next/router';

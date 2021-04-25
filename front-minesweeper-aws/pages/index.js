@@ -6,6 +6,7 @@ import cookie from 'js-cookie';
 import { GetApp } from '@material-ui/icons';
 import Router from 'next/router';
 import SignIn from './login'
+import React, { useEffect } from 'react';
 
 
 
@@ -16,10 +17,10 @@ function Home() {
   let lastGameId = cookie.get('lastGameId');
   console.log("inside Home")
   console.log(lastGameId)
-  useEffect(()=>{
-    
-  },[])
-  const {data, revalidate} = useSWR(config.local_back+'/validate', async function() {
+  let data = undefined
+  const [loggedIn, setLoggedIn] = React.useState()
+  
+  useEffect(async ()=>{
     try{
       const res = await fetch(`${config.local_back}/validate`,{
         method:'GET',
@@ -27,22 +28,27 @@ function Home() {
           'Authorization': cookie.get('token')
         }
       });
-      return res.json();
+      console.log('res ',res)
+      if(res.status === 401){
+        Router.push('/login')
+      }
+      data = await res.json();
+      if (!data) return <h1>Loading...</h1>;
+      else if (data.message === "continue") {
+        console.log(data)
+        setLoggedIn(true)
+        //loggedIn = true;
+      }
+      else{
+        Router.push('/login')
+      }
     }catch(error){
       console.log(error);
-      Router.push('/error')
+      Router.push('/login')
     }
-    
-  });
-  let loggedIn = false;
-  if (!data) return <h1>Loading...</h1>;
-  else if (data.message === "continue") {
-    console.log(data)
-    loggedIn = true;
-  }
-  else{
-    Router.push('/login')
-  }
+  },[])
+  
+  
   
   
   return (
@@ -56,9 +62,6 @@ function Home() {
           <MainMenu/>
         </>
       )}
-       {/* {!loggedIn && (
-        <SignIn/>
-      )} */} 
     </div>
   );
 }

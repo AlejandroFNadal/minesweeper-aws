@@ -99,7 +99,12 @@ export default function GameBoardContinue(parentState) {
                 'Authorization': cookie.get('token')
             }
         })
+        if(newGame.status === 500){
+            alert('No tienes juegos previos');
+            parentState.setMenu()
+        }
         const game = await newGame.json()
+        
         updateBoard(gameData, game)
         console.log(gameData)
         handleShowBoard();

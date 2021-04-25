@@ -147,8 +147,8 @@ export default function GameBoard(parentState) {
                         </ul>
                     </Box>
                     <Box display='flex' justifyContent='center pt={4}'>
-                        {gameData.fullStatus === "won" ? <p>You Won!</p> : ""}
-                        {gameData.fullStatus === "lost" ? <p>You Lose</p> : ""}
+                        {gameData.fullStatus === "won" ? <p>Ganaste!</p> : ""}
+                        {gameData.fullStatus === "lost" ? <p>Perdiste</p> : ""}
                     </Box>
                     <Box>
                         <Button onClick={()=>{parentState.setMenu()}}> Regresar</Button>
