@@ -52,13 +52,11 @@ export default function Square(obj) {
     let [y, sety] = React.useState(propObject.y)
     let [gameId, setGameId] = React.useState(obj.id)
     let gameUpdater = obj.gameUpdater;
-    console.log(gameId)
 
     let moveCheck = async function(type){
         if(fullGame.fullStatus !== "active"){
             return ;
         }
-        console.log("Inside moveCheck")
         let fetchString = `${config.local_back}/move?id=${gameId}&x=${x}&y=${y}&type=${type}`
         let moveAttempt = await fetch(fetchString,{
             method:'POST',
@@ -68,11 +66,9 @@ export default function Square(obj) {
             }
         })
         let moveAttemptJ = await moveAttempt.json()
-        console.log(moveAttemptJ)
         
         gameUpdater(null,moveAttemptJ.game)
         
-        console.log(`Move in ${x} ${y}`)
     }
     
     return (

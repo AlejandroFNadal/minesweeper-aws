@@ -15,8 +15,6 @@ import MainMenu from '../components/mainmenu'
 
 function Home() {
   let lastGameId = cookie.get('lastGameId');
-  console.log("inside Home")
-  console.log(lastGameId)
   let data = undefined
   const [loggedIn, setLoggedIn] = React.useState()
   
@@ -28,14 +26,12 @@ function Home() {
           'Authorization': cookie.get('token')
         }
       });
-      console.log('res ',res)
       if(res.status === 401){
         Router.push('/login')
       }
       data = await res.json();
       if (!data) return <h1>Loading...</h1>;
       else if (data.message === "continue") {
-        console.log(data)
         setLoggedIn(true)
         //loggedIn = true;
       }

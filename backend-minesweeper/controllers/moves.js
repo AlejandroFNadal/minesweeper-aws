@@ -14,22 +14,17 @@ const dynamoDb = IS_OFFLINE === true ?
 
     //recursively goes through in a depth first algoritm in a plus shape. 
 function depthFirstPath(prevPositions, x, y, board, maxX, maxY){
-    console.log(x," ",y)
     if(prevPositions.includes([x,y])){
-        console.log("case 1")
         return ;
     }
     else if(x < 0 || y < 0 || x >= maxX || y >= maxY){
-        console.log("case 2")
         return ;
     }
     else if(board[x][y].neighborBombs >0 && board[x][y].status==="tiled"){
-        console.log("case 3")
         board[x][y].status="untiled"
         return ;
     }
     else if(board[x][y].neighborBombs === 0 && board[x][y].status==="tiled"){
-        console.log("case 4")
         board[x][y].status="untiled";
         prevPositions.push([x,y]);
         depthFirstPath(prevPositions,x,y-1,board,maxX, maxY);
@@ -107,8 +102,6 @@ exports.addMove = async function (req, res, next) {
         if(detectWin(objGame.board,objGame.x, objGame.y)){
             objGame.endGame(true)
         }   
-        
-        console.log(objGame.fullStatus)
         //update object
         let gameUpdate = dynamoDb.update({
             TableName:"games",

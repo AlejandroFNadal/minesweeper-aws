@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 export default function GameBoardContinue(parentState) {
-    console.log(parentState)
+    
     const router = useRouter()
     const classes = useStyles();
     let [x, setX] = React.useState(0)
@@ -90,7 +90,6 @@ export default function GameBoardContinue(parentState) {
     }
     const startGame = async function () {
         let user = cookie.get('username')
-        console.log("user",user)
         let fetchString = `${config.local_back}/game?user=${cookie.get('username')}`
         let newGame = await fetch(fetchString, {
             method: 'GET',
@@ -106,9 +105,7 @@ export default function GameBoardContinue(parentState) {
         const game = await newGame.json()
         
         updateBoard(gameData, game)
-        console.log(gameData)
         handleShowBoard();
-        console.log("showBoard ", showBoard)
 
     }
     useEffect(()=>{

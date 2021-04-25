@@ -56,7 +56,6 @@ export default function SignIn() {
 
 
   function handleSubmit(e){
-    console.log("here")
     e.preventDefault();
     fetch(`${config.local_back}/login`,{
       method:'POST',
@@ -72,7 +71,6 @@ export default function SignIn() {
       return r.json();
     })
     .then((data)=>{
-      console.log(data);
       if(data && data.token){
         cookie.set('token', data.token,{expires:2})
         cookie.set('lastGameId', data.lastGameId);
@@ -118,10 +116,6 @@ export default function SignIn() {
             autoComplete="password"
             value={password}
             onChange={(e)=> setPassword(e.target.value)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
           />
           <Button
             type="submit"

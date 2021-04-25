@@ -8,8 +8,8 @@ function getRndInteger(min, max) {
 const Game = class {
     constructor(x, y, nBombs, possibleBoard, possiblefullStatus,possibleFlags) {
 
-        console.log("Game Constructor")
-        console.log(x, " ", y, " ", nBombs)
+        
+        
         this.x = x;
         this.y = y;
         this.nBombs = nBombs;
@@ -36,7 +36,6 @@ const Game = class {
             this.board = possibleBoard;
         }
         else {
-            console.log("Creating Board from scratch")
             for (let i = 0; i < x; i++) {
                 let tempRow = []
                 for (let j = 0; j < y; j++) {
@@ -45,7 +44,6 @@ const Game = class {
                 this.board.push(tempRow);
             }
             let bombPos = []
-            console.log(this.board)
             //create positions of bombs
             while (bombPos.length < nBombs) {
                 let tempx = getRndInteger(0, this.x - 1)
@@ -54,8 +52,6 @@ const Game = class {
                 var pair = [tempx, tempy]
                 if (!(bombPos.includes(pair))) {
                     bombPos.push(pair)
-                    console.log(tempx, " ", tempy)
-                    console.log(this.board[tempx])
                     this.board[tempx][tempy].turnIntoBomb()
                 }
             }
@@ -105,7 +101,7 @@ const Game = class {
             }
             stringBoard = stringBoard + "\n"
         }
-        console.log("Inside textBoardNotTiled, ", stringBoard)
+        
         return stringBoard;
     }
     textBoardTiled() {
@@ -130,7 +126,6 @@ const Game = class {
             }
             stringBoard = stringBoard + "|\n"
         }
-        console.log("Inside textBoardNotTiled, ", stringBoard)
         return stringBoard;
     }
     endGame(status) {

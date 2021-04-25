@@ -43,7 +43,6 @@ export default function MainMenu() {
   const [menu,setMenu] = React.useState(true)
   const [continuation, setContinuation] = React.useState(false)
   const classes = useStyles();
-  console.log(menu)
   const startNewGame=(e)=>{
       setMenu(false);
   }

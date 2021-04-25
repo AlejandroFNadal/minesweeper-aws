@@ -83,7 +83,6 @@ export default function GameBoard(parentState) {
         setGameData(currentState)
     }
     const startGame = async function (e) {
-        console.log('info',e)
         let newGame = await fetch(config.local_back + '/games', {
             method: 'POST',
             headers: {
@@ -101,9 +100,7 @@ export default function GameBoard(parentState) {
         })
         const game = await newGame.json()
         updateBoard(gameData, game)
-        console.log(gameData)
         handleShowBoard();
-        console.log("showBoard ", showBoard)
 
     }
     
@@ -113,8 +110,8 @@ export default function GameBoard(parentState) {
                 <Box p={2} className={classes.drawer}>
                     <form onSubmit={handleSubmit(startGame)}>
                         <div>
-                            <TextField {...register("X")} margin="normal" id="X" name="X" label="X" type="text" />
-                            <TextField {...register("Y")} margin="normal" id="Y" name="Y" label="Y" type="text" />
+                            <TextField {...register("X")} margin="normal" id="X" name="X" label="Altura del tablero" type="text" />
+                            <TextField {...register("Y")} margin="normal" id="Y" name="Y" label="Ancho del tablero" type="text" />
                             <TextField {...register("nBombs")} margin="normal" id="nBombs" name="nBombs" label="Bombas" type="text" />
                             <button type="submit">Comenzar</button>
                         </div>

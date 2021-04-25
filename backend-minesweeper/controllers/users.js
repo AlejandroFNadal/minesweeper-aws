@@ -49,7 +49,6 @@ exports.signUp = async function(req,res,next){
             if(err){
                 return next(err);
             }
-            console.log(hash)
             let password = hash;
             const username = user.username;
             const params = {
@@ -93,7 +92,6 @@ exports.login = async function(req,res,next){
     let result = await dynamoDb.query(params).promise()
     
     if(result.Items){
-        console.log(result)
         let userData = result.Items[0];
         comparePassword(req.body.password,userData.password, async function(err,isMatch){
             if(isMatch && !err){
